@@ -1,6 +1,8 @@
 """Core budget operations for the CSV-based CLI app."""
 
-from typing import Any, Dict, List
+import csv
+from pathlib import Path
+from typing import Any, Dict, List, Union
 
 
 def add_transaction(
@@ -38,3 +40,19 @@ def filter_by_category(
         for transaction in transactions
         if str(transaction["category"]).casefold() == normalized_category
     ]
+
+
+def load_transactions_from_csv(file_path: Union[str, Path]) -> List[Dict[str, Any]]:
+    """Load transactions from a CSV file and convert amount values to integers."""
+    with Path(file_path).open(encoding="utf-8-sig", newline="") as csv_file:
+        return [
+            {
+                "date": row["date"],
+                "type": row["type"],
+                "category": row["category"],
+                "description": row["description"],
+                "amount": int(row["amount"]),
+                "memo": row["memo"],
+            }
+            for row in csv.DictReader(csv_file)
+        ]

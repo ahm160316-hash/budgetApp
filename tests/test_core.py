@@ -4,7 +4,12 @@ import csv
 from pathlib import Path
 from typing import Any, Dict, List
 
-from budget.core import add_transaction, filter_by_category, get_balance
+from budget.core import (
+    add_transaction,
+    filter_by_category,
+    get_balance,
+    load_transactions_from_csv,
+)
 
 
 def load_step2_transactions() -> List[Dict[str, Any]]:
@@ -100,3 +105,20 @@ def test_filter_by_category_returns_independent_results() -> None:
     result[0]["memo"] = "changed"
 
     assert original_salary["memo"] == original_memo
+
+
+def test_load_transactions_from_csv_reads_step1_transactions() -> None:
+    csv_path = Path(__file__).parent.parent / "data" / "step1_transactions.csv"
+
+    transactions = load_transactions_from_csv(csv_path)
+
+    assert len(transactions) == 10
+    assert transactions[0] == {
+        "date": "2026-01-05",
+        "type": "지출",
+        "category": "식비",
+        "description": "점심식사",
+        "amount": -12000,
+        "memo": "",
+    }
+    assert isinstance(transactions[0]["amount"], int)
