@@ -25,3 +25,16 @@ def add_transaction(
 def get_balance(transactions: List[Dict[str, Any]]) -> float:
     """Return the sum of all transaction amounts."""
     return float(sum(transaction["amount"] for transaction in transactions))
+
+
+def filter_by_category(
+    transactions: List[Dict[str, Any]],
+    category: str,
+) -> List[Dict[str, Any]]:
+    """Return transactions matching the category without mutating the source."""
+    normalized_category = category.casefold()
+    return [
+        dict(transaction)
+        for transaction in transactions
+        if str(transaction["category"]).casefold() == normalized_category
+    ]
