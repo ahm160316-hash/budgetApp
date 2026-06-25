@@ -20,3 +20,8 @@ def add_transaction(
         }
     )
     return updated_transactions
+
+
+def get_balance(transactions: List[Dict[str, Any]]) -> float:
+    """Return the sum of all transaction amounts."""
+    return float(sum(transaction["amount"] for transaction in transactions))
